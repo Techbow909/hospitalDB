@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>HospitalDB</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+  <nav>
+    <div class="nav-brand">HospitalDB</div>
+    <div class="nav-links">
+      <button class="nav-btn active" data-page="dashboard">Dashboard</button>
+      <button class="nav-btn" data-page="patients">Patients</button>
+      <button class="nav-btn" data-page="appointments">Appointments</button>
+      <button class="nav-btn" data-page="staff">Staff</button>
+      <button class="nav-btn" data-page="rooms">Rooms</button>
+      <button class="nav-btn" data-page="revenue">Revenue</button>
+    </div>
+  </nav>
+
+  <main>
+
+    <!-- ── DASHBOARD ─────────────────────────────────────────────── -->
+    <section id="page-dashboard" class="page active">
+      <h1>Dashboard</h1>
+      <div class="stat-grid" id="stat-grid"></div>
+
+      <h2>Org Chart</h2>
+      <div class="card">
+        <div id="org-chart"></div>
+      </div>
+    </section>
+
+    <!-- ── PATIENTS ──────────────────────────────────────────────── -->
+    <section id="page-patients" class="page">
+      <div class="page-header">
+        <h1>Patients</h1>
+        <button class="btn-primary" onclick="openModal('modal-add-patient')">+ Add Patient</button>
+      </div>
+
+      <div class="search-row">
+        <input id="patient-search" type="text" placeholder="Search by name..." />
+        <button class="btn-primary" onclick="searchPatients()">Search</button>
+      </div>
+
+      <div class="card">
+        <table id="patient-table">
+          <thead>
+            <tr>
+              <th>ID</th><th>Name</th><th>DOB</th><th>Gender</th>
+              <th>Phone</th><th>Actions</th>
+            </tr>
+          </thead>
+          <tbody></tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- ── APPOINTMENTS ───────────────────────────────────────────── -->
+    <section id="page-appointments" class="page">
+      <div class="page-header">
+        <h1>Appointments</h1>
+        <button class="btn-primary" onclick="openModal('modal-book')">+ Book Appointment</button>
+      </div>
+      <div class="card">
+        <table id="appt-table">
+          <thead>
+            <tr>
+              <th>ID</th><th>Date</th><th>Patient</th><th>Doctor</th>
+              <th>Nurse</th><th>Room</th><th>Notes</th><th>Actions</th>
+            </tr>
+          </thead>
+          <tbody></tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- ── STAFF ──────────────────────────────────────────────────── -->
+    <section id="page-staff" class="page">
+      <div class="page-header">
+        <h1>Staff</h1>
+        <button class="btn-primary" onclick="openModal('modal-add-staff')">+ Add Staff</button>
+      </div>
+
+      <h2>Doctor Specialties</h2>
+      <div class="card">
+        <table id="doctor-table">
+          <thead>
+            <tr><th>ID</th><th>Name</th><th>Department</th><th>Specialty</th></tr>
+          </thead>
+          <tbody></tbody>
+        </table>
+      </div>
+
+      <h2>All Staff</h2>
+      <div class="card">
+        <table id="staff-table">
+          <thead>
+            <tr><th>ID</th><th>Name</th><th>Gender</th><th>Department</th><th>Supervisor</th><th>Email</th></tr>
+          </thead>
+          <tbody></tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- ── ROOMS ──────────────────────────────────────────────────── -->
+    <section id="page-rooms" class="page">
+      <h1>Rooms</h1>
+      <div class="card">
+        <table id="room-table">
+          <thead>
+            <tr><th>ID</th><th>Room Number</th><th>Status</th></tr>
+          </thead>
+          <tbody></tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- ── REVENUE ────────────────────────────────────────────────── -->
+    <section id="page-revenue" class="page">
+      <h1>Revenue Summary</h1>
+      <div class="card">
+        <table id="revenue-table">
+          <thead>
+            <tr><th>Doctor</th><th>Department</th><th>Appointments</th><th>Total Revenue</th></tr>
+          </thead>
+          <tbody></tbody>
+        </table>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ── MODALS ─────────────────────────────────────────────────────── -->
+
+  <!-- Add Patient -->
+  <div id="modal-add-patient" class="modal-overlay">
+    <div class="modal">
+      <div class="modal-header">
+        <h3>Add Patient</h3>
+        <button class="modal-close" onclick="closeModal('modal-add-patient')">✕</button>
+      </div>
+      <div class="modal-body">
+        <label>First Name</label>
+        <input id="p-first" type="text" />
+        <label>Last Name</label>
+        <input id="p-last" type="text" />
+        <label>Date of Birth</label>
+        <input id="p-dob" type="date" />
+        <label>Gender</label>
+        <select id="p-gender">
+          <option value="">-- Select --</option>
+          <option>Male</option>
+          <option>Female</option>
+          <option>Other</option>
+        </select>
+        <label>Phone</label>
+        <input id="p-phone" type="text" />
+        <label>Address</label>
+        <input id="p-address" type="text" />
+      </div>
+      <div class="modal-footer">
+        <button class="btn-secondary" onclick="closeModal('modal-add-patient')">Cancel</button>
+        <button class="btn-primary" onclick="addPatient()">Add Patient</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Book Appointment -->
+  <div id="modal-book" class="modal-overlay">
+    <div class="modal">
+      <div class="modal-header">
+        <h3>Book Appointment</h3>
+        <button class="modal-close" onclick="closeModal('modal-book')">✕</button>
+      </div>
+      <div class="modal-body">
+        <label>Patient ID</label>
+        <input id="b-patient" type="number" />
+        <label>Doctor ID</label>
+        <input id="b-doctor" type="number" />
+        <label>Nurse ID (optional)</label>
+        <input id="b-nurse" type="number" />
+        <label>Room ID</label>
+        <input id="b-room" type="number" />
+        <label>Date & Time</label>
+        <input id="b-date" type="datetime-local" />
+        <label>Notes</label>
+        <input id="b-notes" type="text" />
+      </div>
+      <div class="modal-footer">
+        <button class="btn-secondary" onclick="closeModal('modal-book')">Cancel</button>
+        <button class="btn-primary" onclick="bookAppointment()">Book</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Complete Appointment -->
+  <div id="modal-complete" class="modal-overlay">
+    <div class="modal">
+      <div class="modal-header">
+        <h3>Complete Appointment</h3>
+        <button class="modal-close" onclick="closeModal('modal-complete')">✕</button>
+      </div>
+      <div class="modal-body">
+        <input id="c-appt-id" type="hidden" />
+        <label>Treatment Type</label>
+        <input id="c-type" type="text" />
+        <label>Treatment Notes</label>
+        <input id="c-notes" type="text" />
+        <label>Payment Amount ($)</label>
+        <input id="c-amount" type="number" step="0.01" />
+      </div>
+      <div class="modal-footer">
+        <button class="btn-secondary" onclick="closeModal('modal-complete')">Cancel</button>
+        <button class="btn-primary" onclick="completeAppointment()">Complete</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Transfer Room -->
+  <div id="modal-transfer" class="modal-overlay">
+    <div class="modal">
+      <div class="modal-header">
+        <h3>Transfer Room</h3>
+        <button class="modal-close" onclick="closeModal('modal-transfer')">✕</button>
+      </div>
+      <div class="modal-body">
+        <input id="t-appt-id" type="hidden" />
+        <label>New Room ID</label>
+        <input id="t-room" type="number" />
+      </div>
+      <div class="modal-footer">
+        <button class="btn-secondary" onclick="closeModal('modal-transfer')">Cancel</button>
+        <button class="btn-primary" onclick="transferRoom()">Transfer</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Patient History -->
+  <div id="modal-history" class="modal-overlay">
+    <div class="modal modal-wide">
+      <div class="modal-header">
+        <h3>Patient History</h3>
+        <button class="modal-close" onclick="closeModal('modal-history')">✕</button>
+      </div>
+      <div class="modal-body">
+        <table id="history-table">
+          <thead>
+            <tr><th>Appt ID</th><th>Date</th><th>Doctor</th><th>Treatment</th><th>Notes</th><th>Paid</th></tr>
+          </thead>
+          <tbody></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- Add Staff -->
+  <div id="modal-add-staff" class="modal-overlay">
+    <div class="modal">
+      <div class="modal-header">
+        <h3>Add Staff Member</h3>
+        <button class="modal-close" onclick="closeModal('modal-add-staff')">✕</button>
+      </div>
+      <div class="modal-body">
+        <label>First Name</label>
+        <input id="s-first" type="text" />
+        <label>Last Name</label>
+        <input id="s-last" type="text" />
+        <label>Gender</label>
+        <select id="s-gender">
+          <option value="">-- Select --</option>
+          <option>Male</option>
+          <option>Female</option>
+          <option>Other</option>
+        </select>
+        <label>Email</label>
+        <input id="s-email" type="email" />
+        <label>Department ID</label>
+        <input id="s-dept" type="number" />
+        <label>Supervisor ID (optional)</label>
+        <input id="s-sup" type="number" />
+        <label>Role</label>
+        <select id="s-role">
+          <option value="Staff">Staff</option>
+          <option value="Doctor">Doctor</option>
+          <option value="Nurse">Nurse</option>
+        </select>
+      </div>
+      <div class="modal-footer">
+        <button class="btn-secondary" onclick="closeModal('modal-add-staff')">Cancel</button>
+        <button class="btn-primary" onclick="addStaff()">Add</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast -->
+  <div id="toast" class="toast"></div>
+
+  <script src="app.js"></script>
+</body>
+</html>
